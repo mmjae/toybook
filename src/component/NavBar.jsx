@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import '../css/nav.css';
-
+import {Link} from 'react-router-dom';
 class NavBar extends Component {
-
-    bookManager = (e) =>{
-        e.preventDefault();
-        this.props.history.push("/book-manager");
-    }
-
-
+    
     render() {
         return (
             <div>
                 <ul>
-                    <li><a className="active" href="#home">Home</a></li>
-                    <li><a href="#news" onClick={this.bookManager}>도서 관리</a></li>
-                    <li><a href="#contact">회원 관리</a></li>
+                    <li><Link to="/" className="active">Home</Link></li>
+                    <li><Link to="/book-manager">도서 관리</Link></li>
+                    <li><Link to="/user-manager" >회원 관리</Link></li>
                 </ul>
             </div>
         );

@@ -3,6 +3,8 @@ import Header from './component/Header';
 import NavBar from './component/NavBar';
 import AppRouter from './route/RouterComponent';
 import {BrowserRouter} from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
   return (
     <div className="App">

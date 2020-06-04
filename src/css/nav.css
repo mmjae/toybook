@@ -23,6 +23,12 @@ li a {
 li a:hover:not(.active) {
     background-color: #111;
 }
+li a:hover{
+    color: white;
+    text-decoration: none;
+    
+}
 .active {
     background-color: rgba(196, 167, 74, 0.856);
+    background-color: #848484;
 }

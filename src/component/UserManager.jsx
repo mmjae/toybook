@@ -21,7 +21,7 @@ class UserManager extends Component {
         this.getUsersList();
     }
     async getUsersList() {
-        var { data: users } = await axios.get(USER_API_BASE_URL + "/users");
+        var { data : users } = await axios.get(USER_API_BASE_URL + "/users");
         this.setState({ users });
     }
     delUser = (e) => {
@@ -29,13 +29,14 @@ class UserManager extends Component {
 
         var delList=this.state.delList;
 
-
-         axios.delete(USER_API_BASE_URL +"/delete/"+ delList)
+         axios.delete(USER_API_BASE_URL +"/delete",{data : delList})
              .then(res => {
-                 this.setState({
-                    users: this.state.users.filter((user,idx) => user.ID !== delList[idx])
-                 });
-             }).catch(err => { console.log(err) });
+                        this.setState({
+                           users: this.state.users.filter((user) =>!delList.includes(user.ID)),
+                           delList : []
+                        });
+                        alert(res.data.message);
+             }).catch( err => { console.log(err) });
     }
 
     addUser = (e) =>{
@@ -46,10 +47,9 @@ class UserManager extends Component {
     }
 
     modeCheck = () =>{
+
         if(this.state.mode === "add"){
-
             var result = <AddUser></AddUser>;
-
         }
 
         return result;
@@ -85,8 +85,8 @@ class UserManager extends Component {
             <div>
                 <div>
                     <ButtonGroup style={btnStyle}>
-                        <Button variant="secondary" onClick={this.addUser}>유저 추가</Button>
-                        <Button variant="secondary" onClick={this.delUser}>유저 삭제</Button>
+                        <Button variant="secondary" onClick={this.addUser}>회원 추가</Button>
+                        <Button variant="secondary" onClick={this.delUser}>회원 삭제</Button>
                     </ButtonGroup>
                 </div>
                 <div>{this.modeCheck()}</div>

@@ -19,6 +19,7 @@ li a {
     text-align: center;
     padding: 17px 100px;
     text-decoration: none;
+    font-weight: bold;
 }
 li a:hover:not(.active) {
     background-color: #111;
@@ -30,5 +31,4 @@ li a:hover{
 }
 .active {
     background-color: rgba(196, 167, 74, 0.856);
-    background-color: #848484;
 }

@@ -1,13 +1,38 @@
 import React, { Component } from 'react';
 import '../css/nav.css';
 import {Link} from 'react-router-dom';
+import axios from "axios";
+
+const USER_API_BASE_URL = "http://localhost:8090";
+
 class NavBar extends Component {
-    
+
+    checkFrm = (e) => {
+        if(Object.keys(this.props.data).length!==0){
+            if(window.confirm("저장 되지 않은 데이터가 있습니다 저장 하시겠습니까")){
+                this.tempoUser(this.props.data);
+            }else{
+                alert("저장안함");
+                e.preventDefault();
+            }
+        }
+    }
+
+    async tempoUser (userData) {
+        var {data : message} = await axios.post(USER_API_BASE_URL+"/temporayuser",{
+            userName : userData.userName,
+            password : userData.password,
+            age : userData.age
+        });
+        alert(message.message);
+    }
+
+
     render() {
         return (
             <div>
                 <ul>
-                    <li><Link to="/" className="active">Home</Link></li>
+                    <li><Link to="/" className="active" onClick={this.checkFrm}>Home</Link></li>
                     <li><Link to="/book-manager">도서 관리</Link></li>
                     <li><Link to="/user-manager" >회원 관리</Link></li>
                 </ul>

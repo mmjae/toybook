@@ -1,0 +1,10 @@
+
+.userInfoFrm input{
+    border-radius: 8px;
+    font-weight: bold;
+    height: 37px;
+}
+
+*{
+    outline: none;
+}

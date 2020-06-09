@@ -13,7 +13,8 @@ class UserManager extends Component {
         this.state = {
             users: [],
             mode : "",
-            delList : []
+            delList : [],
+            addUser : {}
         }
     }
 
@@ -47,9 +48,10 @@ class UserManager extends Component {
     }
 
     modeCheck = () =>{
-
         if(this.state.mode === "add"){
-            var result = <AddUser></AddUser>;
+            var result = <AddUser onChange={function(user){
+                this.props.onChange(user);
+            }.bind(this)}></AddUser>;
         }
 
         return result;
@@ -116,7 +118,7 @@ class UserManager extends Component {
 
 const btnStyle = {
     marginBottom: "15px",
-    marginLeft : "15px"
+    marginLeft : "15px",
 }
 
 

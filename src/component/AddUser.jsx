@@ -9,30 +9,7 @@ class AddUser extends Component {
             age: ""
     }
 
-    userNameSavePoint = () => {
-        var userName = "";
-        if(this.state.userName!==""){
-            userName = this.state.userName;
-        }
-        return userName;
-    }
-
-    userPasswordSavePoint = () => {
-        var password = "";
-        if(this.state.password!==""){
-            password = this.state.password
-        }
-        return password;
-    }
-
-    userAgeSavePoint = () => {
-        var age = "";
-        if(this.state.age!==""){
-            age = this.state.age
-        }
-        return age;
-    }
-
+    //임시저장 데이터 props로 뿌려서 받아와야함
 
     render() {
         return (

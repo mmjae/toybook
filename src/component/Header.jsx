@@ -12,7 +12,7 @@ var write ={
     textAlign : "center",
     color : "white",
     paddingTop : "50px",
-    cursor: "default"
+    cursor: "default",
 }
 
 class Header extends Component{

@@ -7,33 +7,33 @@ const USER_API_BASE_URL = "http://localhost:8090";
 
 class NavBar extends Component {
 
-    checkFrm = (e) => {
-        if(Object.keys(this.props.data).length!==0){
-            if(window.confirm("저장 되지 않은 데이터가 있습니다 저장 하시겠습니까")){
-                this.tempoUser(this.props.data);
+     async tempoUser (userData) {
+         var {data : message} = await axios.post(USER_API_BASE_URL+"/temporayuser",{
+             username : userData.username,
+             password : userData.password,
+             age : userData.age
+         });
+         alert(message.message);
+         if(message.message==='success'){
+            this.props.tUserDelete();
+         }
+     }
+    checkFrm = () =>{
+        if(Object.keys(this.props.tuser).length!==0){
+            if(window.confirm('저장 되지 않는 데이터가 있습니다. 저장 하시겠습니까?')){
+                   this.tempoUser(this.props.tuser);
             }else{
-                alert("저장안함");
-                e.preventDefault();
+                this.props.tUserDelete();
             }
         }
     }
-
-    async tempoUser (userData) {
-        var {data : message} = await axios.post(USER_API_BASE_URL+"/temporayuser",{
-            userName : userData.userName,
-            password : userData.password,
-            age : userData.age
-        });
-        alert(message.message);
-    }
-
 
     render() {
         return (
             <div>
                 <ul>
                     <li><Link to="/" className="active" onClick={this.checkFrm}>Home</Link></li>
-                    <li><Link to="/book-manager">도서 관리</Link></li>
+                    <li><Link to="/book-manager" onClick={this.checkFrm}>도서 관리</Link></li>
                     <li><Link to="/user-manager" >회원 관리</Link></li>
                 </ul>
             </div>

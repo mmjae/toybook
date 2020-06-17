@@ -5,9 +5,7 @@ export default createStore(function (state, action) {
     if (state === undefined) {
         return {
             tuser: {
-                // username: "",
-                // password: "",
-                // age: ""
+               
             }
         }
     }

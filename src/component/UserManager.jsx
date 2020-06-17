@@ -5,7 +5,6 @@ import AddUser from '../container/AddUser';
 
 const USER_API_BASE_URL = "http://localhost:8090";
 
-
 class UserManager extends Component {
 
     constructor(props) {
@@ -13,9 +12,9 @@ class UserManager extends Component {
         this.state = {
             users: [],
             mode: "addOn",
-            checkUser: [],
             addUser: {},
-            editMode: false
+            editMode: false,
+            temporayMode : false   
         }
     }
 

@@ -13,6 +13,7 @@ class UserManager extends Component {
             users: [],
             mode: "addOn",
             addUser: {},
+            editUsers : [],
             editMode: false,
             temporayMode : false   
         }
@@ -136,8 +137,18 @@ class UserManager extends Component {
                 editMode: false
             });
         } else {
+
+            var arrr = this.state.users;
+            var setEditUser = []
+            for(var i in arrr ){
+                if(arr[i].checked===true){
+                    setEditUser.push(arr[i]);
+                }
+            }
+
             this.setState({
-                editMode: true
+                editMode: true,
+                editUsers : setEditUser
             })
         }
 
@@ -148,21 +159,28 @@ class UserManager extends Component {
     editUsers = (e, userID) => {
         var name = e.target.name;
         var value = e.target.value;
-        var arr = this.state.users
-        for (var key in arr) {
-            if (arr[key].ID === userID) {
+
+        var editArr = this.state.editUsers
+
+        //수정 모드가 켜져 있는 상태로 체크가 추가 될시에 후 처리를 어떻게 해야될지 작업이 필요함
+
+        for (var key in editArr) {
+            if (editArr[key].ID === userID) {
                 if (name === 'username') {
-                    arr[key].USERNAME = value
+                    editArr[key].USERNAME = value
                 } else if (name === 'password') {
-                    arr[key].PASSWORD = value
+                    editArr[key].PASSWORD = value
                 } else if (name === 'age') {
-                    arr[key].AGE = value
+                    editArr[key].AGE = value
                 }
             }
         }
+
         this.setState({
-            users: arr
-        });
+            editUsers : editArr
+        })
+
+      
 
     }
 
@@ -199,13 +217,13 @@ class UserManager extends Component {
                                 checked={user.checked}
                                 onChange={this.cancelcheck}
                             />&nbsp;&nbsp;{user.ID}</td>
-                            <td><input type="text" value={user.USERNAME} name="username" onChange={function (e) {
+                            <td><input type="text" defaultValue={user.USERNAME} name="username" onChange={function (e) {
                                 this.editUsers(e, user.ID);
                             }.bind(this)} style={inputStyle} /></td>
-                            <td><input type="text" value={user.PASSWORD} name='password' onChange={function (e) {
+                            <td><input type="text" defaultValue={user.PASSWORD} name='password' onChange={function (e) {
                                 this.editUsers(e, user.ID);
                             }.bind(this)} style={inputStyle} /></td>
-                            <td><input type="number" value={user.AGE} name='age' onChange={function (e) {
+                            <td><input type="number" defaultValue={user.AGE} name='age' onChange={function (e) {
                                 this.editUsers(e, user.ID);
                             }.bind(this)} style={ageStyle} /></td>
                         </tr>)
@@ -222,10 +240,16 @@ class UserManager extends Component {
         }
     }
 
+    editUserCancel = () =>{
+
+    }
+
+
     editModeCheck = () => {
         var result;
         if (this.state.editMode === true) {
-            result = <Button variant="outline-warning" onClick={this.editUserSave} style={style1}>저장</Button>
+            result = <><Button variant="outline-warning" onClick={this.editUserSave} style={style1}>저장</Button> 
+            <Button variant="outline-warning" onClick={this.editUserCancel} style={style1}>취소</Button></>;
         } else {
             result = null;
         }
@@ -236,7 +260,7 @@ class UserManager extends Component {
 
 
     editUserSave = () => {
-        var arr = this.state.users;
+        var arr = this.state.editUsers;
         for (var key in arr) {
             if (arr[key].USERNAME === '' || arr[key].PASSWORD === '' || arr[key].AGE === '') {
                 alert('비어있는 란을 작성해주세요.');
@@ -244,14 +268,14 @@ class UserManager extends Component {
             }
         }
 
-        var editUsers = [];
+        // var editUsers = [];
 
-        for (var k in arr) {
-            if (arr[k].checked === true) {
-                editUsers.push(arr[k]);
-            }
-        }
-        this.editUserSaveGo(editUsers);
+        // for (var k in arr) {
+        //     if (arr[k].checked === true) {
+        //         editUsers.push(arr[k]);
+        //     }
+        // }
+        this.editUserSaveGo(arr);
 
     }
 

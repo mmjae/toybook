@@ -30,7 +30,18 @@ class AddUser extends Component {
     async addUser(e) {
         e.preventDefault();
         var user = this.state;
-        console.log(user);
+
+        if(user.userName===''){
+            alert('회원 이름을 입력 해주세요.');
+            return false;
+        }else if(user.password===''){
+            alert('비밀번호를 입력 해주세요.');
+            return false;
+        }else if(user.age===''){
+            alert('나이를 입력 해주세요.');
+            return false;
+        }
+
         var { data: result } = await axios.post(USER_API_BASE_URL + "/add", user);
         alert(result.message);
         if (result.message === 'success') {
@@ -47,6 +58,13 @@ class AddUser extends Component {
     async tempoSave(e) {
         e.preventDefault();
         var tempoUser = this.state;
+
+        if(tempoUser.age=== "" && tempoUser.password === "" && tempoUser.userName === ""){
+            alert("임시 저장할 내용이 없습니다.");
+            return;
+        }
+
+
         var { data: result } = await axios.post(USER_API_BASE_URL + "/temporayuser", {
             username: tempoUser.userName,
             password: tempoUser.password,
@@ -62,13 +80,7 @@ class AddUser extends Component {
         }
     }
     tempoList = () => {
-        if (this.state.tempoMode === true) {
-
-            this.setState({
-                tempoMode: false
-            })
-
-        } else if (this.state.tempoMode === false) {
+        if (this.state.tempoMode === false) {
             this.getTempoList();
         }
     }
@@ -78,7 +90,8 @@ class AddUser extends Component {
         result.map(user => user.checked = false);
         this.setState({
             tempoMode: true,
-            tempoUsers: result
+            tempoUsers: result,
+            tempoEditMode : false
         })
     }
 
@@ -126,23 +139,31 @@ class AddUser extends Component {
             return (
                 this.state.tempoUsers.map((user, index) =>
                     <tr key={user.ID}>
-                        <td><input type="checkBox" onChange={() => this.delTempoUser(user.ID)} checked={user.checked}/></td>
                         <td>{user.USERNAME}</td>
                         <td>{user.PASSWORD}</td>
                         <td>{user.AGE}</td>
                         <td>{user.SAVEDATE}</td>
+                        <td><input type="checkBox" onChange={(e) => this.delTempoUser(e,user.ID)} checked={user.checked}/></td>
                     </tr>
                 )
             )
         }
     }
 
-    delTempoUser =(id) =>{
-        //이벤트 객체 받아와서 check true 와 false로 갈라야됌
-      var result= this.state.tempoUsers.map(user => user.ID === id ? {...user, checked : true} : user);
-        this.setState({
-            tempoUsers : result
-        })
+    delTempoUser =(e,id) =>{
+        var check = e.target.checked;
+        if(check===true){
+            var result= this.state.tempoUsers.map(user => user.ID === id ? {...user, checked : true} : user);
+              this.setState({
+                  tempoUsers : result
+              })
+
+        }else{
+             result= this.state.tempoUsers.map(user => user.ID === id ? {...user, checked : false} : user);
+            this.setState({
+                tempoUsers : result
+            })
+        }
     }
 
     tempoEditMode = () => {
@@ -151,12 +172,34 @@ class AddUser extends Component {
                 tempoEditMode: true
             })
         } else if (this.state.tempoEditMode === true) {
+            var tempoUsers = this.state.tempoUsers;
+            var delTempoUsers= []
+            for(var key in tempoUsers){
+                if(tempoUsers[key].checked===true){
+                    delTempoUsers.push(tempoUsers[key]);
+                }
+            }
+            if(delTempoUsers.length!==0){
+                this.delTempoUserGo(delTempoUsers);
+                return false;
+            }
+
             this.setState({
                 tempoEditMode: false
             })
         }
     }
+    async delTempoUserGo (delTempoUsers) {
+        var {data : result } = await axios.delete(USER_API_BASE_URL+ "/temporayuser" ,{data: delTempoUsers});
+        alert(result.message);
+        if(result.message === 'success'){
+            var newTempo = this.state.tempoUsers.filter(user => user.checked === false );
+            this.setState({
+                tempoUsers : newTempo
+            })
+        }
 
+    }
     render() {
         return (
             <div>

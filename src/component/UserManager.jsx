@@ -84,7 +84,7 @@ class UserManager extends Component {
 
 
 
-        var arr = this.state.users;
+        var arr = this.state.users.slice(0);
         if (checked === false) {
             for (var key in arr) {
                 if (arr[key].ID === idNum) {
@@ -97,13 +97,21 @@ class UserManager extends Component {
                 }
             }
         }
+        var arrr = this.state.users.slice(0);
+
         if (checked === true) {
-            for (var k in arr) {
-                if (arr[k].ID === idNum) {
-                    var sel1 = arr[k];
+            for (var k in arrr) {
+                if (arrr[k].ID === idNum) {
+                    var sel1 = arrr[k];
                     sel1.checked = true;
+                    var editUser = {}
+                    editUser.USERNAME=sel1.USERNAME;
+                    editUser.PASSWORD=sel1.PASSWORD;
+                    editUser.AGE=sel1.AGE;
+                    editUser.ID=sel1.ID;
                     this.setState({
-                        users: arr
+                        users: arrr,
+                        editUsers : this.state.editUsers.concat(editUser)
                     })
                     return;
                 }
@@ -138,12 +146,19 @@ class UserManager extends Component {
             });
         } else {
 
-            var arrr = this.state.users;
+            var arrr = this.state.users.slice(0);
             var setEditUser = []
             for(var i in arrr ){
-                if(arr[i].checked===true){
-                    setEditUser.push(arr[i]);
+                
+                if(arrr[i].checked===true){
+                    var editUserObj ={}
+                    editUserObj.USERNAME = arrr[i].USERNAME;
+                    editUserObj.PASSWORD = arrr[i].PASSWORD;
+                    editUserObj.AGE = arrr[i].AGE;
+                    editUserObj.ID = arrr[i].ID;
+                    setEditUser.push(editUserObj);
                 }
+
             }
 
             this.setState({
@@ -159,7 +174,6 @@ class UserManager extends Component {
     editUsers = (e, userID) => {
         var name = e.target.name;
         var value = e.target.value;
-
         var editArr = this.state.editUsers
 
         //수정 모드가 켜져 있는 상태로 체크가 추가 될시에 후 처리를 어떻게 해야될지 작업이 필요함
@@ -185,12 +199,11 @@ class UserManager extends Component {
     }
 
     cancelcheck = (e) => {
+        e.preventDefault();
         if (e.target.checked === false) {
-            e.preventDefault();
-            alert("저장을 먼저 하세요.");
+            alert("저장을 먼저 해주세요.");
             return;
         }
-
     }
 
 
@@ -199,7 +212,7 @@ class UserManager extends Component {
             return (
                 this.state.users.map(user =>
                     <tr key={user.ID}>
-                        <td><input type="checkbox" onChange={this.checkUser} value={user.ID} checked={user.checked}
+                        <td><input type="checkbox" onChange={this.checkUser} value={user.ID||''} checked={user.checked||''}
                         />&nbsp;&nbsp;{user.ID}</td>
                         <td>{user.USERNAME}</td>
                         <td>{user.PASSWORD}</td>
@@ -229,7 +242,7 @@ class UserManager extends Component {
                         </tr>)
                     }
                     return <tr key={user.ID}>
-                        <td><input type="checkbox" onChange={this.checkUser} value={user.ID} checked={user.checked}
+                        <td><input type="checkbox" onChange={this.checkUser} value={user.ID||''} checked={user.checked||''}
                         />&nbsp;&nbsp;{user.ID}</td>
                         <td>{user.USERNAME}</td>
                         <td>{user.PASSWORD}</td>
@@ -240,8 +253,17 @@ class UserManager extends Component {
         }
     }
 
-    editUserCancel = () =>{
+    editUserCancel = (e) =>{
+        e.preventDefault();
+        if(window.confirm('수정 하신 내용이 초기화 됩니다 계속 하시겠습니까?')){
 
+            this.setState({
+                editMode : false,
+                editUsers : this.state.users
+            })
+
+
+        }
     }
 
 
@@ -268,13 +290,6 @@ class UserManager extends Component {
             }
         }
 
-        // var editUsers = [];
-
-        // for (var k in arr) {
-        //     if (arr[k].checked === true) {
-        //         editUsers.push(arr[k]);
-        //     }
-        // }
         this.editUserSaveGo(arr);
 
     }
@@ -282,8 +297,20 @@ class UserManager extends Component {
     async editUserSaveGo(editUsers) {
         var {data : message} = await axios.put(USER_API_BASE_URL+"/users",editUsers)
         if(message.message==="success"){
+
+            var users = this.state.users;
+
+            var result=users.map(function(user){
+                for(var key in editUsers){
+                    if(editUsers[key].ID === user.ID){
+                        user=editUsers[key];
+                    }
+                }
+                return user;
+            })
+
             this.setState({ editMode: false,
-            users : this.state.users.map(user => user.checked===true ? ({...user, checked : false }) : user ) })
+            users : result});
         }
         alert(message.message);
 

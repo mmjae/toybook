@@ -20,10 +20,22 @@ class AddUser extends Component {
         }
     }
 
+    async tempoUser () {
+        var {data : message} = await axios.post(USER_API_BASE_URL+"/temporayuser",{
+            username : this.state.userName,
+            password : this.state.password,
+            age : this.state.age
+        });
+        alert(message.message);
+    }
+
+
+
     componentWillUnmount() {
         if (this.state.userName !== '' || this.state.password !== '' || this.state.age !== '') {
-            //저장 logic을 쓰면 된다.
-
+            if(window.confirm("작성된 데이터가 있습니다. 저장 하시겠습니까?")){
+              this.tempoUser();
+            }
         }
     }
 

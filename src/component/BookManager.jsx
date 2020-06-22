@@ -48,7 +48,8 @@ class BookManager extends Component {
     // 현재 보이는 모드가 어떤거냐에 따라서 다른 컴포넌트들을 보여줌  
     modeCheck = () => {
         if(this.state.mode==='add' && this.state.open === true){
-            return(<AddBook/>);
+            return(<><AddBook/><Button variant="outline-warning" style={bookAddBtn}>등록</Button>
+            <Button variant="outline-warning" style={bookAddBtn1}>취소</Button></>);
         }
     }
 
@@ -67,6 +68,14 @@ class BookManager extends Component {
     }
 
 }
+
+const bookAddBtn1 = {
+    color: "rgb(90, 98, 104)",
+    fontWeight: 'bold',
+    border: "1.5px solid #ffc107",
+    marginLeft: "10px"
+}
+
 
 const bookAddBtn =
 {

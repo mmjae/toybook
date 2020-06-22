@@ -27,7 +27,6 @@ li a:hover:not(.active) {
 li a:hover{
     color: white;
     text-decoration: none;
-    
 }
 .active {
     background-color: rgba(196, 167, 74, 0.856);
